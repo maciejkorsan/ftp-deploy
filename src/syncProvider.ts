@@ -128,18 +128,20 @@ export class FTPSyncProvider implements ISyncProvider {
 
         const path = this.getFileBreadcrumbs(folderPath + "/");
 
+        
         if (path.folders === null) {
             this.logger.verbose(`  no need to change dir`);
         }
         else {
             this.logger.verbose(`  removing folder "${path.folders.join("/") + "/"}"`);
             if (this.dryRun === false) {
+                
+                await this.upDir(path.folders?.length);
                 await retryRequest(this.logger, async () => await this.client.removeDir(path.folders!.join("/") + "/"));
             }
         }
 
         // navigate back to the root folder
-        await this.upDir(path.folders?.length);
 
         this.logger.verbose(`  completed`);
     }
